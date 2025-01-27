@@ -104,10 +104,10 @@
         </div>
         <input type="range" id="seekbar" class="seekbar" min="0" value="0">
         <div class="controls">
-            <button id="prev">&#9664;&#9664;</button>
-            <button id="play">&#9654;</button>
-            <button id="pause">&#10074;&#10074;</button>
-            <button id="next">&#9654;&#9654;</button>
+            <button id="prev">◀◀</button>
+            <button id="play">▶</button>
+            <button id="pause">❚❚</button>
+            <button id="next">▶▶</button>
         </div>
         <div class="playlist">
             <ul id="playlist">
@@ -118,18 +118,13 @@
 
     <script>
         const playlist = [
-            { title: "Song 1", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
+             { title: "Song 1", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
             { title: "Song 2", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
             { title: "Song 3", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
-    
-   { title: "Song 4", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
+            { title: "Song 4", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
             { title: "Song 5", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
             { title: "Song 6", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
-
-
-
-
-   ];
+        ];
 
         let currentIndex = 0;
         let isPlaying = false;
@@ -145,7 +140,7 @@
         const totalDurationElement = document.getElementById('total-duration');
         const seekbar = document.getElementById('seekbar');
 
-        // Load the playlist
+        // Load the playlist into the DOM
         function loadPlaylist() {
             playlist.forEach((track, index) => {
                 const li = document.createElement('li');
@@ -155,7 +150,7 @@
             });
         }
 
-        // Play the selected track
+          // Play the selected track
         function playTrack(index) {
             currentIndex = index;
             audio.src = playlist[currentIndex].src;
@@ -168,11 +163,19 @@
         // Update UI elements
         function updateUI() {
             currentTrackElement.textContent = `Playing: ${playlist[currentIndex].title}`;
-            playButton.disabled = isPlaying;
-            pauseButton.disabled = !isPlaying;
             highlightCurrentTrack();
             updateDuration();
+           updatePlayPauseButtons();
         }
+        function updatePlayPauseButtons() {
+        if (isPlaying) {
+            playButton.style.display = 'none';
+            pauseButton.style.display = 'inline-block';
+        } else {
+            playButton.style.display = 'inline-block';
+            pauseButton.style.display = 'none';
+        }
+    }
 
         // Highlight the current track
         function highlightCurrentTrack() {
@@ -209,13 +212,18 @@
         // Event listeners for buttons
         playButton.addEventListener('click', () => {
             if (!isPlaying) {
-                audio.play();
-                isPlaying = true;
-                updateUI();
+                 if (!audio.src) {
+                   // If no track is loaded initially, play the first track
+                    playTrack(0);
+                  }
+                else{
+                 audio.play();
+                  isPlaying = true;
+                  updateUI();
+                }
             }
         });
-
-        pauseButton.addEventListener('click', () => {
+         pauseButton.addEventListener('click', () => {
             audio.pause();
             isPlaying = false;
             updateUI();
@@ -230,21 +238,19 @@
             currentIndex = (currentIndex + 1) % playlist.length;
             playTrack(currentIndex);
         });
-
         // Seekbar event listener
         seekbar.addEventListener('input', () => {
             audio.currentTime = seekbar.value;
         });
-
         // Autoplay next track when the current track ends
         audio.addEventListener('ended', () => {
             currentIndex = (currentIndex + 1) % playlist.length;
             playTrack(currentIndex);
         });
-
         // Initialize the player
-        loadPlaylist();
-        playTrack(currentIndex);  // Start with the first track
+         loadPlaylist();
+         // Initially hide pause button
+         pauseButton.style.display = 'none'
     </script>
 </body>
 </html>
