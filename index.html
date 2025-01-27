@@ -51,7 +51,7 @@
             color: #fff;
             cursor: pointer;
             transition: background-color 0.3s;
-            font-size: 18px;
+            font-size: 9px;
         }
 
         .controls button:hover {
@@ -86,6 +86,11 @@
         .playlist li:hover {
             background-color: #eee;
         }
+
+        .playlist .active {
+            background-color: #007bff;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -113,10 +118,18 @@
 
     <script>
         const playlist = [
-            { title: "Song 1", src: "song1.mp3", albumArt: "path/to/albumArt1.jpg" },
-            { title: "Song 2", src: "song2.mp3", albumArt: "path/to/albumArt2.jpg" },
-            { title: "Song 3", src: "song3.mp3", albumArt: "path/to/albumArt3.jpg" },
-        ];
+            { title: "Song 1", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
+            { title: "Song 2", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
+            { title: "Song 3", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
+    
+   { title: "Song 4", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
+            { title: "Song 5", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
+            { title: "Song 6", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
+
+
+
+
+   ];
 
         let currentIndex = 0;
         let isPlaying = false;
@@ -157,7 +170,20 @@
             currentTrackElement.textContent = `Playing: ${playlist[currentIndex].title}`;
             playButton.disabled = isPlaying;
             pauseButton.disabled = !isPlaying;
+            highlightCurrentTrack();
             updateDuration();
+        }
+
+        // Highlight the current track
+        function highlightCurrentTrack() {
+            const tracks = document.querySelectorAll('.playlist li');
+            tracks.forEach((track, index) => {
+                if (index === currentIndex) {
+                    track.classList.add('active');
+                } else {
+                    track.classList.remove('active');
+                }
+            });
         }
 
         // Update the duration elements
@@ -182,9 +208,11 @@
 
         // Event listeners for buttons
         playButton.addEventListener('click', () => {
-            audio.play();
-            isPlaying = true;
-            updateUI();
+            if (!isPlaying) {
+                audio.play();
+                isPlaying = true;
+                updateUI();
+            }
         });
 
         pauseButton.addEventListener('click', () => {
@@ -208,9 +236,15 @@
             audio.currentTime = seekbar.value;
         });
 
+        // Autoplay next track when the current track ends
+        audio.addEventListener('ended', () => {
+            currentIndex = (currentIndex + 1) % playlist.length;
+            playTrack(currentIndex);
+        });
+
         // Initialize the player
         loadPlaylist();
-        updateUI();
+        playTrack(currentIndex);  // Start with the first track
     </script>
 </body>
 </html>
