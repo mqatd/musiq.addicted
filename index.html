@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,9 +29,13 @@
         }
 
         .album-art {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 20px;
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    object-fit: cover; /* Crucial Line */
+    object-position: center; /* Optional: default position is center but this makes explicit */
+    aspect-ratio: 1 / 1; /* Optional: Force a square aspect ratio */
+
         }
 
         .now-playing {
