@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,13 +26,12 @@
         }
 
         .album-art {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    object-fit: cover; /* Crucial Line */
-    object-position: center; /* Optional: default position is center but this makes explicit */
-    aspect-ratio: 1 / 1; /* Optional: Force a square aspect ratio */
-
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            object-fit: cover;
+            object-position: center;
+            aspect-ratio: 1 / 1;
         }
 
         .now-playing {
@@ -125,7 +121,7 @@
 
     <script>
         const playlist = [
-             { title: "Song 1", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
+            { title: "Song 1", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
             { title: "Song 2", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
             { title: "Song 3", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
             { title: "Song 4", src: "https://files.catbox.moe/evwlar.mp3", albumArt: "https://files.catbox.moe/88obwx.jpeg" },
@@ -147,6 +143,11 @@
         const totalDurationElement = document.getElementById('total-duration');
         const seekbar = document.getElementById('seekbar');
 
+        // **Set default album art when no music is played**
+        const defaultAlbumArt = "https://files.catbox.moe/88obwx.jpeg";
+        albumArtElement.src = defaultAlbumArt;
+
+
         // Load the playlist into the DOM
         function loadPlaylist() {
             playlist.forEach((track, index) => {
@@ -157,7 +158,7 @@
             });
         }
 
-          // Play the selected track
+        // Play the selected track
         function playTrack(index) {
             currentIndex = index;
             audio.src = playlist[currentIndex].src;
@@ -172,17 +173,18 @@
             currentTrackElement.textContent = `Playing: ${playlist[currentIndex].title}`;
             highlightCurrentTrack();
             updateDuration();
-           updatePlayPauseButtons();
+            updatePlayPauseButtons();
         }
+
         function updatePlayPauseButtons() {
-        if (isPlaying) {
-            playButton.style.display = 'none';
-            pauseButton.style.display = 'inline-block';
-        } else {
-            playButton.style.display = 'inline-block';
-            pauseButton.style.display = 'none';
+            if (isPlaying) {
+                playButton.style.display = 'none';
+                pauseButton.style.display = 'inline-block';
+            } else {
+                playButton.style.display = 'inline-block';
+                pauseButton.style.display = 'none';
+            }
         }
-    }
 
         // Highlight the current track
         function highlightCurrentTrack() {
@@ -230,7 +232,8 @@
                 }
             }
         });
-         pauseButton.addEventListener('click', () => {
+
+        pauseButton.addEventListener('click', () => {
             audio.pause();
             isPlaying = false;
             updateUI();
@@ -245,19 +248,23 @@
             currentIndex = (currentIndex + 1) % playlist.length;
             playTrack(currentIndex);
         });
+
         // Seekbar event listener
         seekbar.addEventListener('input', () => {
             audio.currentTime = seekbar.value;
         });
+
         // Autoplay next track when the current track ends
         audio.addEventListener('ended', () => {
             currentIndex = (currentIndex + 1) % playlist.length;
             playTrack(currentIndex);
         });
+
         // Initialize the player
-         loadPlaylist();
+        loadPlaylist();
          // Initially hide pause button
-         pauseButton.style.display = 'none'
+        pauseButton.style.display = 'none';
+
     </script>
 </body>
 </html>
